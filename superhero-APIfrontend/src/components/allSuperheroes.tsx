@@ -27,7 +27,7 @@ export default function AllSuperheroes() {
       }
     }
     getSuperheroes();
-  }, []);
+  }, [superheroes]);
 
   const formChangeHandler = (e: any) => {
     const { name, value } = e.target;
@@ -36,9 +36,25 @@ export default function AllSuperheroes() {
       [name]: value,
     }));
   };
-  const submitHandler = (e: any) => {
+  const submitHandler = async (e: any) => {
     e.preventDefault();
-    console.log(formData.humilityScore);
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    };
+    try {
+      const response = await fetch(BASEURL, requestOptions);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
